@@ -11,15 +11,12 @@ namespace ReminderAPI;
 public class ReminderService : IHostedService
 {
 	private readonly IServiceProvider _serviceProvider;
-
-
 	private Timer _timer;
 
 	public ReminderService(IServiceProvider serviceProvider)
 	{
 		_serviceProvider = serviceProvider;
 	}
-
 
 
 	public Task StartAsync(CancellationToken cancellationToken)
@@ -34,8 +31,6 @@ public class ReminderService : IHostedService
 		using (var scope = _serviceProvider.CreateScope())
 		{
 			var context = scope.ServiceProvider.GetRequiredService<ReminderDbContext>();
-			var emailSender = scope.ServiceProvider.GetRequiredService<IEmailSender>();
-
 			var reminders = await context.Reminders
 				.Where(r => r.SendAt <= DateTime.Now && !r.IsSent).ToListAsync();
 
@@ -43,12 +38,12 @@ public class ReminderService : IHostedService
 			{
 				if(reminder.Method.ToLower() == "email")
 				{
-					emailSender.SendEmailAsync(reminder.To, "Reminder", reminder.Content);
+					await SendEmailReminder(scope, reminder);
 				}
 
 				else if (reminder.Method.ToLower()=="telegram")
 				{
-					await SendTelegramReminder(reminder);
+					await SendTelegramReminder(scope, reminder);
 				}
 
 				reminder.IsSent = true;
@@ -57,11 +52,17 @@ public class ReminderService : IHostedService
 		}
 	}
 
-	private async Task SendTelegramReminder(Reminder reminder)
+	private async Task SendTelegramReminder(IServiceScope scope, Reminder reminder)
 	{
-		var telegramService = _serviceProvider.GetRequiredService<TelegramSender>();
+		var telegramService = scope.ServiceProvider.GetRequiredService<TelegramSender>();
 
 		await telegramService.SendTelegramReminderAsync(reminder.To, reminder.Content);
+	}
+
+	private async Task SendEmailReminder(IServiceScope scope, Reminder reminder)
+	{
+		var emailSender = scope.ServiceProvider.GetRequiredService<IEmailSender>();
+		await emailSender.SendEmailAsync(reminder.To, "Reminder", reminder.Content);
 	}
 
 
