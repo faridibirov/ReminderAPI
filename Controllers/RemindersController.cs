@@ -39,7 +39,7 @@ public class RemindersController : ControllerBase
 	[HttpPost]
 	public async Task<ActionResult<Reminder>> CreateReminder ([FromBody] Reminder reminder)
 	{
-		if (reminder.SendAt<=DateTime.Now)
+		if (reminder.SendAt<=DateTime.UtcNow)
 		{
 			return BadRequest("The send date must be in the future.");
 		}
@@ -65,7 +65,7 @@ public class RemindersController : ControllerBase
 			return BadRequest();
 		}
 
-		if (updateReminder.SendAt <= DateTime.Now)
+		if (updateReminder.SendAt <= DateTime.UtcNow)
 		{
 			return BadRequest("The send date must be in the future.");
 		}

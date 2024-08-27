@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReminderAPI.Data;
 
@@ -11,9 +12,11 @@ using ReminderAPI.Data;
 namespace ReminderAPI.Migrations
 {
     [DbContext(typeof(ReminderDbContext))]
-    partial class ReminderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240827102522_AddedIsSentToTable")]
+    partial class AddedIsSentToTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using ReminderAPI;
 using ReminderAPI.Data;
 using ReminderAPI.Helper;
 
@@ -17,6 +18,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHostedService<ReminderService>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 var app = builder.Build();
