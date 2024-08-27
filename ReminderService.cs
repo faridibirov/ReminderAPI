@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using ReminderAPI.Data;
+using ReminderAPI.Helper;
 using ReminderAPI.Models;
 
 namespace ReminderAPI;
@@ -36,7 +37,7 @@ public class ReminderService : IHostedService
 			var emailSender = scope.ServiceProvider.GetRequiredService<IEmailSender>();
 
 			var reminders = await context.Reminders
-				.Where(r => r.SendAt <= DateTime.UtcNow && !r.IsSent).ToListAsync();
+				.Where(r => r.SendAt <= DateTime.Now && !r.IsSent).ToListAsync();
 
 			foreach(var reminder in reminders)
 			{
@@ -58,13 +59,11 @@ public class ReminderService : IHostedService
 
 	private async Task SendTelegramReminder(Reminder reminder)
 	{
-		throw new NotImplementedException();
+		var telegramService = _serviceProvider.GetRequiredService<TelegramSender>();
+
+		await telegramService.SendTelegramReminderAsync(reminder.To, reminder.Content);
 	}
 
-	//private async Task SendEmailReminder(Reminder reminder)
-	//{
-	//	_emailSender.SendEmailAsync(reminder.To, "Reminder", reminder.Content);
-	//}
 
 	public Task StopAsync(CancellationToken cancellationToken)
 	{
