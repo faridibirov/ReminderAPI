@@ -22,13 +22,13 @@ The Reminder API is a web application built with ASP.NET Core that allows users 
 - .NET 8 SDK
 - SQL Server or any other supported database
 - Telegram Bot API Token for sending Telegram reminders
-- SMTP credentials for sending emails via SendGrid
+- SendGrid account for sending emails via SendGrid
 
 ## Getting Started
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/reminder-api.git
+git clone https://github.com/faridibirov/ReminderAPI.git
 cd ReminderAPI
 ```
 
